@@ -3,68 +3,93 @@
   <head>
     <meta charset="UTF-8">
     <title>{{ page.title | default: site.title }}</title>
+    
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
-      /* Dreadnaught Custom Architecture Overrides */
+      /* Cosmos & Deep Void Background */
       body {
-        background-color: #0d0d0d;
-        color: #cccccc;
+        background-color: #050914; 
+        background: radial-gradient(circle at top center, #0a1128 0%, #02040a 100%);
+        color: #c4d4e6; /* Starlight text */
         margin: 0;
         padding: 0;
+        min-height: 100vh;
       }
       
-      /* The Top Header Area */
+      /* The Header Area with Image */
       .dreadnaught-header {
         text-align: center;
-        padding: 40px 0 20px 0;
-        background-color: #050505;
-        border-bottom: 2px solid #333;
+        padding: 70px 0 50px 0;
+        background-color: #02040a;
+        background-image: url('/assets/images/header_background.png');
+        background-size: cover;
+        background-position: center;
+        border-bottom: 2px solid #00ff66; /* Nature/Bioluminescent green border */
+        position: relative;
       }
 
-      /* Text Logo Placeholder (Swap for an <img> later) */
+      /* Dark Tint Overlay (Ensures text is readable over complex images) */
+      .dreadnaught-header::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(2, 4, 10, 0.65); 
+        z-index: 1;
+      }
+
+      /* Orbitron Font + Nebula Glow */
       .dreadnaught-logo {
-        font-family: monospace;
-        font-size: 4rem;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 4.5rem;
         font-weight: 900;
-        color: #e67e22; /* Industrial Orange */
-        text-shadow: 3px 3px 0px #000;
+        color: #d600ff; /* Nebula Magenta */
+        text-shadow: 0px 0px 15px rgba(214, 0, 255, 0.8), 3px 3px 0px #000;
         margin: 0;
-        letter-spacing: 2px;
+        letter-spacing: 4px;
+        position: relative; 
+        z-index: 2; /* Keeps text above the dark overlay */
       }
 
-      /* Factorio-Style Navigation Bar */
+      /* Sleek Rajdhani Navigation Bar */
       .nav-bar {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        background-color: #1a1a1a;
-        padding: 10px;
-        border-bottom: 1px solid #444;
-        box-shadow: 0px 4px 6px rgba(0,0,0,0.5);
+        background-color: rgba(10, 16, 36, 0.95);
+        padding: 12px;
+        border-bottom: 1px solid #1a2b4c;
+        box-shadow: 0px 4px 20px rgba(0, 255, 102, 0.1); 
         margin-bottom: 40px;
-        gap: 5px;
+        gap: 8px;
       }
 
       .nav-item {
-        color: #a0a0a0;
+        color: #8ab4f8;
         text-decoration: none;
         text-transform: uppercase;
-        font-family: Arial, sans-serif;
-        font-size: 0.9rem;
-        font-weight: bold;
-        padding: 8px 16px;
-        background-color: #262626;
-        border: 1px solid #111;
-        border-top: 1px solid #444;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 8px 20px;
+        background-color: #0d152b;
+        border: 1px solid #14203d;
+        border-top: 1px solid #233761;
         border-radius: 2px;
-        transition: all 0.1s ease;
+        transition: all 0.2s ease;
+        letter-spacing: 1px;
       }
 
+      /* Nature/Sci-Fi Hover State */
       .nav-item:hover {
-        color: #ffffff;
-        background-color: #e67e22; /* Orange highlight on hover */
-        border-color: #ff9900;
+        color: #000000; /* Dark text for contrast */
+        background-color: #00ff66; /* Biosphere Green */
+        border-color: #00ff66;
+        box-shadow: 0px 0px 12px rgba(0, 255, 102, 0.6);
         cursor: pointer;
       }
 
@@ -74,6 +99,15 @@
         margin: 0 auto;
         padding: 0 20px;
         padding-bottom: 50px;
+      }
+      
+      /* Make markdown links match the theme */
+      .content-wrapper a {
+        color: #00ff66;
+        text-decoration: none;
+      }
+      .content-wrapper a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
