@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    
+    <style>
+      /* Dreadnaught Custom Architecture Overrides */
+      body {
+        background-color: #0d0d0d;
+        color: #cccccc;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* The Top Header Area */
+      .dreadnaught-header {
+        text-align: center;
+        padding: 40px 0 20px 0;
+        background-color: #050505;
+        border-bottom: 2px solid #333;
+      }
+
+      /* Text Logo Placeholder (Swap for an <img> later) */
+      .dreadnaught-logo {
+        font-family: monospace;
+        font-size: 4rem;
+        font-weight: 900;
+        color: #e67e22; /* Industrial Orange */
+        text-shadow: 3px 3px 0px #000;
+        margin: 0;
+        letter-spacing: 2px;
+      }
+
+      /* Factorio-Style Navigation Bar */
+      .nav-bar {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        background-color: #1a1a1a;
+        padding: 10px;
+        border-bottom: 1px solid #444;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.5);
+        margin-bottom: 40px;
+        gap: 5px;
+      }
+
+      .nav-item {
+        color: #a0a0a0;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: Arial, sans-serif;
+        font-size: 0.9rem;
+        font-weight: bold;
+        padding: 8px 16px;
+        background-color: #262626;
+        border: 1px solid #111;
+        border-top: 1px solid #444;
+        border-radius: 2px;
+        transition: all 0.1s ease;
+      }
+
+      .nav-item:hover {
+        color: #ffffff;
+        background-color: #e67e22; /* Orange highlight on hover */
+        border-color: #ff9900;
+        cursor: pointer;
+      }
+
+      /* Core Content Container */
+      .content-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+        padding-bottom: 50px;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="dreadnaught-header">
+      <h1 class="dreadnaught-logo">DREADNAUGHT</h1>
+    </div>
+
+    <div class="nav-bar">
+      <a href="/" class="nav-item">Home</a>
+      <a href="/roadmap" class="nav-item">Roadmap</a>
+      <a href="/devlog" class="nav-item">Devlog</a>
+      <a href="/systems" class="nav-item">Systems</a>
+      <a href="/architecture" class="nav-item">Architecture</a>
+      <a href="/status" class="nav-item">Status</a>
+      <a href="/notes" class="nav-item">Notes</a>
+    </div>
+
+    <div class="content-wrapper">
+      <section id="main_content">
+        {{ content }}
+      </section>
+    </div>
+  </body>
+</html>
