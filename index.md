@@ -9,13 +9,3 @@ This is the engineering journal for a high-performance, custom AAA-tier game eng
 
 ---
 
-### Engineering Logs
-
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <span>{{ post.date | date: "%B %d, %Y" }}</span> — 
-      <a href="{{ post.url }}">{{ post.title }}</a>
-    </li>
-  {% endfor %}
-</ul>
