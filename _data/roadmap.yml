@@ -1,0 +1,27 @@
+- title: "Part 1: Core Memory & Mathematics (The Bedrock)"
+  items:
+    - id: "1.1"
+      name: "Tiered Epoch Allocators"
+      status: "pending" # Options: pending, complete, blocked
+      desc: "Architecture: Implement hierarchical arena allocators (Persistent -> Instance -> Procedural Phase). Goal: Guarantee zero fragmentation upon portal exit."
+      link: "/devlog/2026-06-25-memory-allocators" # Link to a blog post when you write one!
+      
+    - id: "1.2"
+      name: "Strict Container Wrappers"
+      status: "pending"
+      desc: "Architecture: Implement EASTL-style arrays and buffers that strictly require an explicit allocator context upon initialization."
+      link: ""
+      
+    - id: "1.3"
+      name: "Math Foundation & SIMD Aliasing"
+      status: "pending"
+      desc: "Architecture: Discard GLM. Natively alias core engine math directly to Jolt Physics SIMD types (e.g., Vector3 = JPH::Vec3) to guarantee zero-cost memory copying."
+      link: ""
+
+- title: "Part 2: Entity Component System (ECS)"
+  items:
+    - id: "2.1"
+      name: "The Bounded Registry"
+      status: "pending"
+      desc: "Architecture: A strictly array-based ECS. Zero pointer-chasing."
+      link: ""
