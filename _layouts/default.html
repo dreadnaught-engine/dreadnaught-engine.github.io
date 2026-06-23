@@ -109,6 +109,119 @@
       .content-wrapper a:hover {
         text-decoration: underline;
       }
+      /* --- ROADMAP ACCORDION STYLES --- */
+.roadmap-container {
+  margin-top: 30px;
+}
+
+.roadmap-part-title {
+  color: #00ff66; /* Biosphere Green */
+  border-bottom: 1px solid #1a2b4c;
+  padding-bottom: 5px;
+  margin-top: 40px;
+  font-family: 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* The native HTML5 accordion */
+.roadmap-item {
+  background-color: #0a1128;
+  border: 1px solid #14203d;
+  border-left: 4px solid #333; /* Default left border */
+  margin-bottom: 10px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.roadmap-item summary {
+  padding: 15px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #8ab4f8;
+  background-color: #0d152b;
+  list-style: none; /* Hides default triangle */
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.roadmap-item summary::-webkit-details-marker {
+  display: none; /* Hides triangle in Safari/Chrome */
+}
+
+.roadmap-item summary:hover {
+  background-color: #14203d;
+}
+
+/* The expanded content */
+.item-content {
+  padding: 20px;
+  background-color: rgba(2, 4, 10, 0.8);
+  border-top: 1px solid #14203d;
+  font-family: Arial, sans-serif;
+  color: #c4d4e6;
+  line-height: 1.6;
+}
+
+.item-id {
+  color: #555;
+  margin-right: 15px;
+  font-family: monospace;
+}
+
+/* --- DYNAMIC STATUS SYSTEM --- */
+.status-icon {
+  margin-right: 15px;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+/* 1. Pending Status */
+.status-pending { border-left-color: #555; }
+.status-pending summary .status-icon::before { 
+  content: "○"; 
+  color: #555; 
+}
+
+/* 2. Complete Status */
+.status-complete { border-left-color: #00ff66; }
+.status-complete summary .status-icon::before { 
+  content: "☑"; 
+  color: #00ff66; 
+}
+.status-complete summary .item-name {
+  color: #a0a0a0;
+  text-decoration: line-through; /* Crosses out finished items */
+}
+
+/* 3. Blocked / Revisit Status */
+.status-blocked { border-left-color: #d600ff; }
+.status-blocked summary .status-icon::before { 
+  content: "⊟"; /* Minus box */
+  color: #d600ff; 
+}
+
+/* Button to read blog post */
+.btn-read-more {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 5px 10px;
+  background-color: #1a2b4c;
+  color: #00ff66 !important;
+  border: 1px solid #00ff66;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.btn-read-more:hover {
+  background-color: #00ff66;
+  color: #000 !important;
+  text-decoration: none !important;
+}
     </style>
   </head>
   
