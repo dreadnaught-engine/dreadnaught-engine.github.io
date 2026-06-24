@@ -1,0 +1,187 @@
+---
+layout: default
+title: Systems Architecture
+---
+
+<style>
+  /* Page Header */
+  .systems-header { margin-bottom: 40px; }
+  .systems-header p { color: #a0a0a0; font-size: 1.1rem; line-height: 1.6; }
+  
+  /* CSS Grid Layout */
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  /* Sci-Fi System Card */
+  .system-card {
+    background-color: #0a1128;
+    border: 1px solid #14203d;
+    border-top: 3px solid #8ab4f8;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+
+  /* Status Colors */
+  .status-done { border-top-color: #00ff66; }
+  .status-progress { border-top-color: #e67e22; }
+  .status-planned { border-top-color: #555; }
+
+  /* Card Header */
+  .card-title {
+    font-family: 'Rajdhani', sans-serif;
+    color: #c4d4e6;
+    font-size: 1.6rem;
+    margin: 0 0 10px 0;
+  }
+  
+  .card-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-family: monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 2px;
+    margin-bottom: 15px;
+  }
+  .badge-done { background-color: rgba(0, 255, 102, 0.1); color: #00ff66; border: 1px solid #00ff66; }
+  .badge-progress { background-color: rgba(230, 126, 34, 0.1); color: #e67e22; border: 1px solid #e67e22; }
+  .badge-planned { background-color: rgba(85, 85, 85, 0.2); color: #888; border: 1px solid #555; }
+
+  /* Progress Bar */
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: #02040a;
+    border: 1px solid #14203d;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background-color: #00ff66;
+    transition: width 0.5s ease;
+  }
+  .progress-fill.fill-progress { background-color: #e67e22; }
+  .progress-fill.fill-planned { background-color: #555; }
+
+  /* Card Content */
+  .card-desc {
+    color: #a0a0a0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Pushes the bottom link down */
+  }
+
+  .card-section-title {
+    color: #8ab4f8;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin: 15px 0 5px 0;
+    border-bottom: 1px dashed #14203d;
+    padding-bottom: 3px;
+  }
+  
+  .card-list {
+    margin: 0 0 15px 0;
+    padding-left: 20px;
+    color: #c4d4e6;
+    font-size: 0.9rem;
+  }
+  .card-list li { margin-bottom: 4px; }
+  
+  .card-text {
+    color: #c4d4e6;
+    font-size: 0.9rem;
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+  }
+  .limitations { color: #ff5555; }
+
+  /* Devlog Link */
+  .card-link {
+    display: inline-block;
+    margin-top: auto;
+    padding: 8px 0;
+    color: #d600ff;
+    font-family: monospace;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: right;
+    border-top: 1px solid #14203d;
+  }
+  .card-link:hover { color: #fff; }
+</style>
+
+<div class="systems-header">
+  <h1 style="color: #00ff66; font-family: 'Rajdhani', sans-serif; text-transform: uppercase;">Engine Architecture & Systems</h1>
+  <p>
+    The Dreadnaught Engine is built on a strict Data-Oriented Design (DOD) philosophy. 
+    All logic executes within stateless worker fibers, operating on pure POD components within contiguous memory arrays. 
+    Below is the active registry of subsystems and their current architectural integration status.
+  </p>
+</div>
+
+<div class="systems-grid">
+  {% for sys in site.data.systems %}
+    
+    {% if sys.status == 'Done' %}
+      {% assign status_class = 'status-done' %}
+      {% assign badge_class = 'badge-done' %}
+      {% assign fill_class = 'fill-done' %}
+    {% elsif sys.status == 'In Progress' %}
+      {% assign status_class = 'status-progress' %}
+      {% assign badge_class = 'badge-progress' %}
+      {% assign fill_class = 'fill-progress' %}
+    {% else %}
+      {% assign status_class = 'status-planned' %}
+      {% assign badge_class = 'badge-planned' %}
+      {% assign fill_class = 'fill-planned' %}
+    {% endif %}
+
+    <div class="system-card {{ status_class }}" id="{{ sys.id }}">
+      <h2 class="card-title">{{ sys.name }}</h2>
+      
+      <div>
+        <span class="card-badge {{ badge_class }}">{{ sys.status }} ({{ sys.progress }}%)</span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill {{ fill_class }}" style="width: {{ sys.progress }}%;"></div>
+      </div>
+
+      <div class="card-desc">{{ sys.desc }}</div>
+
+      <div class="card-section-title">KEY FEATURES</div>
+      <ul class="card-list">
+        {% for feature in sys.features %}
+          <li>{{ feature }}</li>
+        {% endfor %}
+      </ul>
+
+      <div class="card-section-title">CORE COMPONENTS (POD)</div>
+      <p class="card-text" style="font-family: monospace; color: #e67e22;">{{ sys.components }}</p>
+
+      <div class="card-section-title">SYSTEM INTERACTIONS</div>
+      <p class="card-text">{{ sys.interactions }}</p>
+
+      {% if sys.limitations %}
+        <div class="card-section-title" style="color: #ff5555;">LIMITATIONS / KNOWN ISSUES</div>
+        <p class="card-text limitations">{{ sys.limitations }}</p>
+      {% endif %}
+
+      <a href="/devlog/?tag={{ sys.tag }}" class="card-link">VIEW DEVLOG LOGS >></a>
+    </div>
+  {% endfor %}
+</div>
