@@ -1,0 +1,195 @@
+---
+layout: default
+title: Architectural Manifesto
+---
+
+<style>
+  /* Split Layout for Documentation */
+  .manifesto-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+
+  /* The Sticky Sidebar */
+  .manifesto-sidebar {
+    position: sticky;
+    top: 20px;
+    width: 280px;
+    flex-shrink: 0;
+    background-color: #050914;
+    border: 1px solid #14203d;
+    border-radius: 4px;
+    padding: 20px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .manifesto-sidebar h3 {
+    color: #00ff66;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    margin-top: 0;
+    border-bottom: 1px dashed #14203d;
+    padding-bottom: 10px;
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .toc-list li { margin-bottom: 8px; }
+  .toc-list a {
+    color: #8ab4f8;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    display: block;
+    padding: 4px 8px;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .toc-list a:hover, .toc-list a.active {
+    color: #fff;
+    border-left-color: #d600ff;
+    background-color: #0d152b;
+  }
+
+  /* The Core Content */
+  .manifesto-content {
+    flex-grow: 1;
+    background-color: rgba(10, 17, 40, 0.5);
+    padding: 0 20px 40px 20px;
+    min-width: 0; /* Prevents flexbox blowout */
+  }
+
+  /* Typography Overrides */
+  .manifesto-content h1 { color: #c4d4e6; font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin-bottom: 10px; }
+  .manifesto-content h2 { color: #00ff66; font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; margin-top: 50px; border-bottom: 2px solid #14203d; padding-bottom: 5px; }
+  .manifesto-content h3 { color: #d600ff; font-family: monospace; font-size: 1.2rem; margin-top: 30px; }
+  .manifesto-content p, .manifesto-content li { color: #a0a0a0; line-height: 1.7; font-size: 1.05rem; }
+  
+  /* Law / Constraint Boxes */
+  .constraint-box {
+    background-color: rgba(255, 0, 0, 0.05);
+    border-left: 4px solid #ff3333;
+    padding: 15px 20px;
+    margin: 20px 0;
+    font-family: monospace;
+  }
+  .constraint-box strong { color: #ff3333; }
+  
+  .mandate-box {
+    background-color: rgba(0, 255, 102, 0.05);
+    border-left: 4px solid #00ff66;
+    padding: 15px 20px;
+    margin: 20px 0;
+    font-family: monospace;
+  }
+  .mandate-box strong { color: #00ff66; }
+
+  /* Code highlights */
+  code { background-color: #02040a; color: #e67e22; padding: 2px 6px; border: 1px solid #14203d; border-radius: 3px; font-size: 0.9em; }
+
+  /* Responsive Design */
+  @media (max-width: 900px) {
+    .manifesto-container { flex-direction: column; }
+    .manifesto-sidebar { width: 100%; position: static; max-height: none; }
+  }
+</style>
+
+<div class="manifesto-container">
+  
+  <div class="manifesto-sidebar">
+    <h3>Data Ledger</h3>
+    <ul class="toc-list" id="auto-toc">
+      </ul>
+  </div>
+
+  <div class="manifesto-content" id="manifesto-text">
+    
+    <h1>Dreadnaught Manifesto</h1>
+    <p>The foundational engineering constraints, technical stack, and data-oriented rules governing the Dreadnaught Engine.</p>
+
+    <h2 id="tech-stack">1. Tech Stack & Major Decisions</h2>
+    <ul>
+      <li><strong>Language & Design Philosophy:</strong> C++23 with strict DOD/ECS. Modern features like <code>this auto</code>, <code>if consteval</code>, and <code>std::mdspan</code> are leveraged specifically to write clean, compile-time-optimized code.</li>
+      <li><strong>Graphics & Pipelining:</strong> A stateless, explicit Render Hardware Interface (RHI) utilizing Bindless Rendering and Mesh Shaders.</li>
+      <li><strong>Physics & Kinematics:</strong> Jolt Physics handles global rigidbodies. VR instances utilize High-Fidelity Active Ragdolls; 60-player raids enforce Custom Kinematics to preserve server budgets.</li>
+      <li><strong>Build System:</strong> Modern CMake. All third-party libraries use strict vendoring / Git Submodules to guarantee 100% offline compilation and build determinism.</li>
+    </ul>
+
+    <h2 id="pillars">2. Architectural Pillars</h2>
+    
+    <h3 id="p1-memory">Pillar 1: Tiered Epoch Allocators</h3>
+    <p>Memory is scoped hierarchically (Persistent Data -> Instance Base Data -> Procedural Phase Data). Procedural Phases utilize a <strong>Ping-Pong Arena topology</strong> to prevent main-thread stutter while waiting for asynchronous callbacks to unmap memory.</p>
+    
+    <h3 id="p2-headless">Pillar 2: Headless Server Compilation</h3>
+    <p>The ECS, Physics, and Game Logic are strictly decoupled from Graphics and Audio via preprocessor definitions. The engine treats single-player natively as a local Listen Server.</p>
+    
+    <h3 id="p3-network">Pillar 3: Unified Hybrid Networking</h3>
+    <p>Snapshot Interpolation & Delta Compression is utilized for remote entities. The server strictly sends mathematical deltas. The client synchronizes via Phase-Locked Loop (PLL) Time Dilation.</p>
+    <div class="constraint-box">
+      <strong>CRITICAL RULE:</strong> "Double-Ticking" the ECS within a single render frame is strictly forbidden to prevent multithreaded thread-barrier deadlocks.
+    </div>
+
+    <h3 id="p4-ecs">Pillar 4: ECS Anti-Fragmentation</h3>
+    <p>Mutable entity states utilize Pre-Allocated Fixed-Size Buffers (e.g., <code>AbilityBuffer</code>). Rapidly adding/removing ECS components is forbidden. Systems overwrite hashes within buffers to guarantee the entity remains in its original Archetype memory chunk.</p>
+
+    <h3 id="p7-data">Pillar 7: Data-Oriented ECS & Transforms</h3>
+    <p>Entities are lightweight IDs. Components are pure POD structs stored in an SoA layout. To support hierarchies without OOP pointers, we use a <code>ParentLink</code> component and a vectorized Transform Resolution System.</p>
+
+    <h3 id="p12-allocator">Pillar 12: Strict Core Allocator Discipline</h3>
+    <div class="constraint-box">
+      <strong>FORBIDDEN:</strong> Zero hidden allocations in the core. Standard library containers (<code>std::vector</code>, <code>std::unordered_map</code>, <code>std::string</code>) are banned. Runtime string execution is strictly forbidden.
+    </div>
+    <p>The engine mandates an EASTL-style custom container library. Strings must be hashed into 64-bit integers via <code>constexpr</code> at compile-time. Asset dependencies rely purely on permanent, 64-bit intrinsic GUIDs.</p>
+
+    <h3 id="p14-streaming">Pillar 14: Asynchronous Direct-to-GPU Streaming</h3>
+    <p>To guarantee seamless portal transitions, a background fiber pipeline leverages DirectStorage to stream upcoming procedural chunks directly from SSD to GPU VRAM, bypassing the CPU main thread entirely.</p>
+
+
+    <h2 id="constraints">3. Coding Constraints & Standards</h2>
+    
+    <div class="mandate-box">
+      <strong>POD MANDATE:</strong> Components are strictly Plain Old Data (POD). Fixed-size arrays (<code>std::array</code>) are permitted only if the maximum size is small and uniform.
+    </div>
+
+    <ul>
+      <li><strong>Strict Determinism:</strong> Standard stateful RNG (<code>std::mt19937</code>, <code>rand()</code>) is forbidden. Worker fibers must utilize explicitly seeded, fiber-local RNG states synced to the server's simulation frame.</li>
+      <li><strong>SIMD Memory Alignment:</strong> Core engine math is natively aliased to 16-byte Jolt Physics SIMD structures. Any ECS component containing spatial vectors MUST utilize the <code>alignas(16)</code> keyword.</li>
+      <li><strong>Network Serialization:</strong> We strictly forbid OOP-based serializers (like Google Protobuf) that rely on hidden heap allocations. All payloads must be pure POD byte-streams pushed directly to a pure-C UDP layer.</li>
+    </ul>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const content = document.getElementById("manifesto-text");
+    const tocList = document.getElementById("auto-toc");
+    
+    // Grab all H2 and H3 elements
+    const headings = content.querySelectorAll("h2, h3");
+    
+    headings.forEach(heading => {
+      // Create a list item and link
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      
+      a.href = "#" + heading.id;
+      a.textContent = heading.textContent;
+      
+      // Indent H3s slightly for visual hierarchy
+      if (heading.tagName.toLowerCase() === "h3") {
+        a.style.paddingLeft = "20px";
+        a.style.color = "#a0a0a0";
+      }
+      
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+  });
+</script>
