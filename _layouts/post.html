@@ -1,0 +1,79 @@
+---
+layout: default
+---
+
+<style>
+  .post-header {
+    border-bottom: 2px solid #14203d;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+  }
+  .post-header h1 {
+    color: #c4d4e6;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+  }
+  .post-header-meta {
+    font-family: monospace;
+    color: #00ff66;
+    font-size: 0.9rem;
+  }
+  .post-body {
+    font-family: Arial, sans-serif;
+    color: #a0a0a0;
+    line-height: 1.7;
+    font-size: 1.05rem;
+  }
+  .post-footer-tags {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px dashed #14203d;
+  }
+  .post-footer-tags a {
+    display: inline-block;
+    background-color: #0d152b;
+    color: #d600ff;
+    padding: 5px 10px;
+    margin-right: 8px;
+    font-family: monospace;
+    text-decoration: none;
+    border: 1px solid #233761;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .post-footer-tags a:hover {
+    background-color: #d600ff;
+    color: #fff;
+  }
+  .back-btn {
+    display: inline-block;
+    margin-top: 30px;
+    color: #8ab4f8;
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .back-btn:hover { color: #fff; }
+</style>
+
+<div class="post-header">
+  <h1>{{ page.title }}</h1>
+  <div class="post-header-meta">
+    Posted by {{ page.author | default: "Dreadnaught Architect" }} | {{ page.date | date: "%B %d, %Y" }}
+  </div>
+</div>
+
+<div class="post-body">
+  {{ content }}
+</div>
+
+<div class="post-footer-tags">
+  <span style="color: #555; font-family: monospace; margin-right: 10px;">TAGGED:</span>
+  {% for tag in page.tags %}
+    <a href="/devlog/?tag={{ tag | downcase }}">[{{ tag }}]</a>
+  {% endfor %}
+</div>
+
+<a href="/devlog/" class="back-btn"><< RETURN TO DEVLOG</a>
