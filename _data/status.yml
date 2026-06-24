@@ -1,0 +1,34 @@
+version: "v0.0.1-pre-alpha"
+last_updated: "2026-06-23"
+
+sprint_focus:
+  - "Implementing Tiered Epoch Allocators (Persistent -> Instance -> Procedural)"
+  - "Bypassing standard library containers to enforce zero hidden allocations"
+
+blockers:
+  - "Unaligned memory access into 128-bit CPU registers for Jolt SIMD math is throwing fatal hardware faults"
+
+telemetry:
+  - metric: "Server Simulation Tick"
+    target: "16.6"
+    actual: "2.1"
+    unit: "ms"
+    state: "optimal" # Options: optimal, warning, critical
+
+  - metric: "Procedural Phase Memory"
+    target: "2000"
+    actual: "450"
+    unit: "MB"
+    state: "optimal"
+
+  - metric: "Entity Capacity Tested"
+    target: "100000"
+    actual: "10000"
+    unit: "count"
+    state: "warning"
+
+  - metric: "Network Bandwidth / Client"
+    target: "128"
+    actual: "256"
+    unit: "kbps"
+    state: "critical"
