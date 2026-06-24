@@ -1,0 +1,137 @@
+---
+layout: default
+title: Devlog
+---
+
+<style>
+  /* Devlog Feed Aesthetics */
+  .post-entry {
+    background-color: #0a1128;
+    border: 1px solid #14203d;
+    border-left: 4px solid #d600ff; /* Nebula Magenta */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+  }
+  .post-title {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+  }
+  .post-title a {
+    color: #c4d4e6;
+    text-decoration: none;
+  }
+  .post-title a:hover {
+    color: #00ff66; /* Biosphere Green */
+  }
+  .post-meta {
+    font-family: monospace;
+    color: #555;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #14203d;
+    padding-bottom: 10px;
+  }
+  .post-excerpt {
+    color: #a0a0a0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+  
+  /* Pagination Controls */
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #050914;
+    padding: 15px;
+    border: 1px solid #14203d;
+    margin-top: 40px;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  .page-btn {
+    color: #00ff66;
+    text-decoration: none;
+    padding: 5px 15px;
+    border: 1px solid #00ff66;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .page-btn:hover {
+    background-color: #00ff66;
+    color: #000;
+  }
+  .jump-box {
+    background-color: #0a1128;
+    color: #00ff66;
+    border: 1px solid #14203d;
+    padding: 5px;
+    width: 50px;
+    text-align: center;
+    font-family: monospace;
+  }
+</style>
+
+<h1 style="color: #00ff66; font-family: 'Rajdhani', sans-serif; text-transform: uppercase;">Engineering Logs</h1>
+
+<div class="devlog-feed">
+  {% for post in paginator.posts %}
+    <div class="post-entry">
+      <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+      <div class="post-meta">
+        Posted by {{ post.author | default: "Dreadnaught Architect" }} | {{ post.date | date: "%B %d, %Y" }}
+      </div>
+      <div class="post-excerpt">
+        {{ post.excerpt | strip_html | truncatewords: 40 }}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% if paginator.total_pages > 1 %}
+<div class="pagination">
+  
+  <div>
+    {% if paginator.previous_page %}
+      <a href="{{ paginator.previous_page_path }}" class="page-btn"><< Newer</a>
+    {% else %}
+      <span style="color: #333;"><< Newer</span>
+    {% endif %}
+  </div>
+
+  <div style="color: #8ab4f8;">
+    Page {{ paginator.page }} of {{ paginator.total_pages }}
+    &nbsp; | &nbsp; Jump to: 
+    <input type="number" id="pageJump" class="jump-box" min="1" max="{{ paginator.total_pages }}" onkeydown="if(event.key === 'Enter') jumpToPage()">
+  </div>
+
+  <div>
+    {% if paginator.next_page %}
+      <a href="{{ paginator.next_page_path }}" class="page-btn">Older >></a>
+    {% else %}
+      <span style="color: #333;">Older >></span>
+    {% endif %}
+  </div>
+
+</div>
+{% endif %}
+
+<script>
+  function jumpToPage() {
+    var maxPages = {{ paginator.total_pages }};
+    var input = document.getElementById('pageJump').value;
+    var pageNum = parseInt(input);
+    
+    if (pageNum > 0 && pageNum <= maxPages) {
+      if (pageNum === 1) {
+        window.location.href = "/devlog/";
+      } else {
+        window.location.href = "/devlog/page" + pageNum + "/";
+      }
+    } else {
+      alert("Page out of bounds. Enter a number between 1 and " + maxPages);
+    }
+  }
+</script>
