@@ -133,6 +133,56 @@ title: Systems Architecture
   </p>
 </div>
 
+<div style="background-color: #050914; border: 1px solid #14203d; border-radius: 4px; padding: 20px; margin-bottom: 50px;">
+  <h2 style="color: #8ab4f8; font-family: 'Rajdhani', sans-serif; margin-top: 0; margin-bottom: 20px; border-bottom: 1px dashed #14203d; padding-bottom: 10px;">CORE PIPELINE TOPOLOGY</h2>
+  
+  <div class="mermaid" style="text-align: center;">
+    graph TD
+      subgraph EXECUTION CONTEXT
+        FS[Fiber Job Scheduler]
+      end
+
+      subgraph DATA BEDROCK
+        ECS[(ECS Archetype Registry)]
+      end
+
+      subgraph SUBSYSTEMS
+        PHYS[Jolt Physics]
+        RHI[Stateless RHI]
+        WASM[Wasm Scripting VM]
+        AUDIO[Wwise Audio]
+      end
+
+      subgraph EXTERNAL IO
+        ASSET[Asset Pipeline / Streamer]
+        NET[ENet Transport Layer]
+      end
+
+      %% Execution Flow
+      FS ==>|Dispatches| PHYS
+      FS ==>|Dispatches| RHI
+      FS ==>|Dispatches| AUDIO
+      FS ==>|Executes| WASM
+
+      %% Data Flow
+      WASM -.->|Deferred Mutation Queue| ECS
+      PHYS <-->|Read/Write 'Transform_Current'| ECS
+      ECS -.->|Read-Only 'Transform_Current'| RHI
+      ECS -.->|Read-Only 'AudioEmitter'| AUDIO
+
+      %% I/O Flow
+      ASSET -->|Memory-Mapped Chunks| ECS
+      ASSET -->|DirectStorage| RHI
+      NET -->|Lock-Free Input Deltas| ECS
+
+      %% Mermaid Styling Overrides
+      classDef default font-family:monospace,font-weight:bold;
+      classDef highlight fill:#d600ff,stroke:#fff,stroke-width:2px,color:#fff;
+      class ECS highlight
+  </div>
+  <p style="text-align: center; color: #555; font-family: monospace; font-size: 0.8rem; margin-top: 15px;">Dotted Lines = Read-Only / Deferred. Solid Lines = Direct Dispatch.</p>
+</div>
+
 <div class="systems-grid">
   {% for sys in site.data.systems %}
     
