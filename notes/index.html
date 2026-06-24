@@ -1,0 +1,118 @@
+---
+layout: default
+title: Engineering Notes & Tracker
+---
+
+<style>
+  /* Carmack-Style Terminal Override */
+  .notes-terminal {
+    background-color: #02040a;
+    border: 1px solid #14203d;
+    border-top: 4px solid #00ff66;
+    padding: 30px;
+    font-family: monospace;
+    color: #00ff66; /* Phosphor Green */
+    min-height: 60vh;
+    box-shadow: inset 0 0 30px rgba(0, 255, 102, 0.05);
+  }
+  .notes-terminal h1 { font-family: 'Rajdhani', sans-serif; color: #fff; margin-top: 0; border-bottom: 1px dashed #14203d; padding-bottom: 10px; }
+  
+  /* Tracker Tag Cloud */
+  .tracker-cloud {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px;
+    padding: 15px; background-color: rgba(10, 17, 40, 0.5); border: 1px dashed #14203d;
+  }
+  .tracker-pill {
+    background-color: #050914; color: #8ab4f8; padding: 4px 10px; font-size: 0.8rem;
+    border: 1px solid #14203d; border-radius: 2px; cursor: pointer; transition: all 0.2s;
+  }
+  .tracker-pill:hover, .tracker-pill.active { background-color: #00ff66; color: #000; border-color: #00ff66; }
+  .tracker-pill.clear-btn { background-color: #555; color: #fff; border-color: #555; display: none; }
+
+  /* Note Entries */
+  .note-entry {
+    margin-bottom: 30px;
+    border-bottom: 1px dashed #14203d;
+    padding-bottom: 20px;
+  }
+  .note-meta { color: #8ab4f8; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; }
+  .note-content { color: #c4d4e6; line-height: 1.6; font-size: 0.95rem; font-family: Arial, sans-serif; }
+  
+  /* Inline Tracker Tags */
+  .inline-tracker {
+    display: inline-block; padding: 2px 6px; margin-left: 10px; font-size: 0.75rem;
+    border: 1px solid #00ff66; color: #00ff66; background-color: rgba(0,255,102,0.1);
+  }
+  .inline-tracker.bug { border-color: #ff3333; color: #ff3333; background-color: rgba(255,51,51,0.1); }
+  .inline-tracker.rework { border-color: #e67e22; color: #e67e22; background-color: rgba(230,126,34,0.1); }
+</style>
+
+<div class="notes-terminal">
+  <h1>SYS_LOG // ISSUE_TRACKER</h1>
+  <p style="color: #555; margin-bottom: 20px;">> Raw engineering telepathy and active issue tracking. Filter by system or status.</p>
+
+  <div class="tracker-cloud" id="trackerCloud">
+    {% assign all_trackers = site.notes | map: 'tracker' | join: ',' | split: ',' | uniq | sort %}
+    {% for tr in all_trackers %}
+      {% if tr != "" %}
+        <span class="tracker-pill" onclick="filterTracker('{{ tr | downcase }}', this)">[{{ tr | upcase }}]</span>
+      {% endif %}
+    {% endfor %}
+    <span class="tracker-pill clear-btn" id="clearTrackerBtn" onclick="clearTracker()">[X] CLEAR FILTER</span>
+  </div>
+
+  <div id="notes-feed">
+    {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
+    {% for note in sorted_notes %}
+      <div class="note-entry" data-trackers="{{ note.tracker | join: ',' | downcase }}">
+        
+        <div class="note-meta">
+          [{{ note.date | date: "%Y-%m-%d %H:%M" }}] 
+          
+          {% for tr in note.tracker %}
+            {% assign tr_down = tr | downcase %}
+            <span class="inline-tracker {% if tr_down == 'bug' %}bug{% elsif tr_down == 'rework' %}rework{% endif %}">
+              {{ tr | upcase }}
+            </span>
+          {% endfor %}
+        </div>
+
+        <div class="note-content">
+          {{ note.content }}
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function filterTracker(selectedTag, element) {
+    document.getElementById('clearTrackerBtn').style.display = 'inline-block';
+    
+    let pills = document.getElementsByClassName('tracker-pill');
+    for(let p of pills) p.classList.remove('active');
+    element.classList.add('active');
+
+    let notes = document.getElementsByClassName('note-entry');
+    for (let note of notes) {
+      let trackers = note.getAttribute('data-trackers').split(',');
+      if (trackers.includes(selectedTag)) {
+        note.style.display = 'block';
+      } else {
+        note.style.display = 'none';
+      }
+    }
+  }
+
+  function clearTracker() {
+    document.getElementById('clearTrackerBtn').style.display = 'none';
+    let pills = document.getElementsByClassName('tracker-pill');
+    for(let p of pills) p.classList.remove('active');
+    
+    let notes = document.getElementsByClassName('note-entry');
+    for (let note of notes) {
+      note.style.display = 'block';
+    }
+  }
+</script>
