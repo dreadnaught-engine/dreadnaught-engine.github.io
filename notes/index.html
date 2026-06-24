@@ -6,13 +6,8 @@ title: Engineering Notes & Tracker
 <style>
   /* Carmack-Style Terminal Override */
   .notes-terminal {
-    background-color: #02040a;
-    border: 1px solid #14203d;
-    border-top: 4px solid #00ff66;
-    padding: 30px;
-    font-family: monospace;
-    color: #00ff66; /* Phosphor Green */
-    min-height: 60vh;
+    background-color: #02040a; border: 1px solid #14203d; border-top: 4px solid #00ff66;
+    padding: 30px; font-family: monospace; color: #00ff66; min-height: 60vh;
     box-shadow: inset 0 0 30px rgba(0, 255, 102, 0.05);
   }
   .notes-terminal h1 { font-family: 'Rajdhani', sans-serif; color: #fff; margin-top: 0; border-bottom: 1px dashed #14203d; padding-bottom: 10px; }
@@ -30,11 +25,7 @@ title: Engineering Notes & Tracker
   .tracker-pill.clear-btn { background-color: #555; color: #fff; border-color: #555; display: none; }
 
   /* Note Entries */
-  .note-entry {
-    margin-bottom: 30px;
-    border-bottom: 1px dashed #14203d;
-    padding-bottom: 20px;
-  }
+  .note-entry { margin-bottom: 30px; border-bottom: 1px dashed #14203d; padding-bottom: 20px; display: none; }
   .note-meta { color: #8ab4f8; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; }
   .note-content { color: #c4d4e6; line-height: 1.6; font-size: 0.95rem; font-family: Arial, sans-serif; }
   
@@ -42,9 +33,29 @@ title: Engineering Notes & Tracker
   .inline-tracker {
     display: inline-block; padding: 2px 6px; margin-left: 10px; font-size: 0.75rem;
     border: 1px solid #00ff66; color: #00ff66; background-color: rgba(0,255,102,0.1);
+    cursor: pointer; transition: all 0.2s;
   }
+  .inline-tracker:hover { background-color: #00ff66; color: #000; }
   .inline-tracker.bug { border-color: #ff3333; color: #ff3333; background-color: rgba(255,51,51,0.1); }
+  .inline-tracker.bug:hover { background-color: #ff3333; color: #fff; }
   .inline-tracker.rework { border-color: #e67e22; color: #e67e22; background-color: rgba(230,126,34,0.1); }
+  .inline-tracker.rework:hover { background-color: #e67e22; color: #000; }
+
+  /* Pagination Controls */
+  .pagination {
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: #050914; padding: 15px; border: 1px solid #14203d;
+    margin-top: 40px; font-family: 'Rajdhani', sans-serif;
+  }
+  .page-btn {
+    color: #00ff66; text-decoration: none; padding: 5px 15px; border: 1px solid transparent;
+    text-transform: uppercase; font-weight: bold; cursor: pointer; background: none;
+  }
+  .page-btn:hover { border-color: #00ff66; }
+  .jump-box {
+    background-color: #0a1128; color: #00ff66; border: 1px solid #14203d;
+    padding: 5px; width: 50px; text-align: center; font-family: monospace;
+  }
 </style>
 
 <div class="notes-terminal">
@@ -55,7 +66,7 @@ title: Engineering Notes & Tracker
     {% assign all_trackers = site.notes | map: 'tracker' | join: ',' | split: ',' | uniq | sort %}
     {% for tr in all_trackers %}
       {% if tr != "" %}
-        <span class="tracker-pill" onclick="filterTracker('{{ tr | downcase }}', this)">[{{ tr | upcase }}]</span>
+        <span class="tracker-pill" data-tag="{{ tr | downcase }}" onclick="filterTracker('{{ tr | downcase }}', this)">[{{ tr | upcase }}]</span>
       {% endif %}
     {% endfor %}
     <span class="tracker-pill clear-btn" id="clearTrackerBtn" onclick="clearTracker()">[X] CLEAR FILTER</span>
@@ -71,7 +82,8 @@ title: Engineering Notes & Tracker
           
           {% for tr in note.tracker %}
             {% assign tr_down = tr | downcase %}
-            <span class="inline-tracker {% if tr_down == 'bug' %}bug{% elsif tr_down == 'rework' %}rework{% endif %}">
+            <span class="inline-tracker {% if tr_down == 'bug' %}bug{% elsif tr_down == 'rework' %}rework{% endif %}" 
+                  onclick="filterTracker('{{ tr_down }}', null)">
               {{ tr | upcase }}
             </span>
           {% endfor %}
@@ -84,35 +96,126 @@ title: Engineering Notes & Tracker
       </div>
     {% endfor %}
   </div>
+
+  <div class="pagination" id="pagination-ui">
+    <div><button id="btn-prev" class="page-btn" onclick="changePage(-1)"><< Newer</button></div>
+    
+    <div style="color: #8ab4f8;">
+      <span id="page-indicator">Page 1 of 1</span>
+      &nbsp; | &nbsp; Jump to: 
+      <input type="number" id="pageJump" class="jump-box" min="1" onkeydown="if(event.key === 'Enter') jumpToPage()">
+    </div>
+
+    <div><button id="btn-next" class="page-btn" onclick="changePage(1)">Older >></button></div>
+  </div>
+
 </div>
 
 <script>
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let currentTag = null;
+
+  function renderFeed() {
+    const allNotes = Array.from(document.getElementsByClassName('note-entry'));
+    
+    // 1. Apply Filters
+    const filteredNotes = allNotes.filter(note => {
+      if (!currentTag) return true;
+      const trackers = note.getAttribute('data-trackers').split(',');
+      return trackers.includes(currentTag);
+    });
+
+    // 2. Pagination Math
+    const totalPages = Math.max(1, Math.ceil(filteredNotes.length / itemsPerPage));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    // 3. Display Logic (Slice the view)
+    allNotes.forEach(note => note.style.display = 'none'); // Hide all
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    
+    for (let i = startIndex; i < endIndex && i < filteredNotes.length; i++) {
+      filteredNotes[i].style.display = 'block';
+    }
+
+    // 4. Update UI Controls
+    document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById('pageJump').max = totalPages;
+    
+    document.getElementById('btn-prev').style.color = currentPage > 1 ? '#00ff66' : '#333';
+    document.getElementById('btn-prev').style.pointerEvents = currentPage > 1 ? 'auto' : 'none';
+    
+    document.getElementById('btn-next').style.color = currentPage < totalPages ? '#00ff66' : '#333';
+    document.getElementById('btn-next').style.pointerEvents = currentPage < totalPages ? 'auto' : 'none';
+    
+    // Hide pagination entirely if there are 10 or fewer filtered notes
+    document.getElementById('pagination-ui').style.display = totalPages <= 1 ? 'none' : 'flex';
+  }
+
+  function changePage(delta) {
+    currentPage += delta;
+    renderFeed();
+    window.scrollTo(0, 0); // Scroll to top on page change
+  }
+
+  function jumpToPage() {
+    const input = parseInt(document.getElementById('pageJump').value);
+    const maxPages = parseInt(document.getElementById('pageJump').max);
+    if (input >= 1 && input <= maxPages) {
+      currentPage = input;
+      renderFeed();
+      window.scrollTo(0, 0);
+    } else {
+      alert("Page out of bounds. Enter a number between 1 and " + maxPages);
+    }
+  }
+
   function filterTracker(selectedTag, element) {
+    currentTag = selectedTag;
+    currentPage = 1; // Reset to page 1 when filtering
+    
     document.getElementById('clearTrackerBtn').style.display = 'inline-block';
     
+    // Update active pill styling
     let pills = document.getElementsByClassName('tracker-pill');
     for(let p of pills) p.classList.remove('active');
-    element.classList.add('active');
-
-    let notes = document.getElementsByClassName('note-entry');
-    for (let note of notes) {
-      let trackers = note.getAttribute('data-trackers').split(',');
-      if (trackers.includes(selectedTag)) {
-        note.style.display = 'block';
-      } else {
-        note.style.display = 'none';
-      }
+    
+    if (element) {
+        element.classList.add('active');
+    } else {
+        // If triggered by an inline tag, find the corresponding top cloud pill
+        let targetPill = document.querySelector(`.tracker-pill[data-tag="${selectedTag}"]`);
+        if (targetPill) targetPill.classList.add('active');
     }
+    
+    // Update the URL so it can be shared or refreshed
+    window.history.replaceState(null, '', '?tag=' + selectedTag);
+    renderFeed();
   }
 
   function clearTracker() {
+    currentTag = null;
+    currentPage = 1;
     document.getElementById('clearTrackerBtn').style.display = 'none';
+    
     let pills = document.getElementsByClassName('tracker-pill');
     for(let p of pills) p.classList.remove('active');
     
-    let notes = document.getElementsByClassName('note-entry');
-    for (let note of notes) {
-      note.style.display = 'block';
-    }
+    window.history.replaceState(null, '', window.location.pathname);
+    renderFeed();
   }
+
+  // Initialize the feed on load
+  document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tagParam = urlParams.get('tag');
+    if (tagParam) {
+      filterTracker(tagParam.toLowerCase(), null);
+    } else {
+      renderFeed();
+    }
+  });
 </script>
