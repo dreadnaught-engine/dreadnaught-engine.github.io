@@ -1,0 +1,41 @@
+- id: "ecs-core"
+  name: "ECS Core Foundation"
+  status: "In Progress"
+  progress: 65
+  desc: "A strict Structure of Arrays (SoA) Entity Component System utilizing Tiered Epoch Allocators to guarantee zero fragmentation."
+  features:
+    - "O(1) Ping-Pong Arena Allocators"
+    - "Archetype Chunk Manager"
+    - "Lock-Free Ring-Buffers"
+  components: "EntityID, Transform_Current, Transform_Prev"
+  interactions: "The absolute bedrock. Serves as the immutable start-of-frame state for the Wasm Scripting VM."
+  limitations: "Double-Buffering is currently forced on all entities; needs strict culling for Archetype_Static."
+  tag: "ecs"
+
+- id: "physics-jolt"
+  name: "Physics Integration (Jolt)"
+  status: "Planned"
+  progress: 10
+  desc: "Global rigidbodies and kinematics using Jolt Physics, heavily multithreaded via the Fiber Scheduler."
+  features:
+    - "Fiber-synced Step Simulation"
+    - "60-Player Custom Kinematics"
+    - "Macro/Micro Voxel Destruction"
+  components: "RigidBodyComponent, VoxelMacroChunkComponent"
+  interactions: "Syncs directly with the ECS via a hard thread barrier before read-only queries."
+  limitations: "Voxel destruction is currently saturating the PCIe bus; moving debris generation to GPU compute."
+  tag: "physics"
+
+- id: "rhi-pipeline"
+  name: "Stateless RHI & Rendering"
+  status: "Planned"
+  progress: 5
+  desc: "A stateless, explicit Render Hardware Interface targeting Bindless Rendering and Mesh Shaders."
+  features:
+    - "Multithreaded Command Generation"
+    - "Clustered Shading Point-Lights"
+    - "World-Space Diegetic UI Projection"
+  components: "RenderState, MeshBounds"
+  interactions: "Asynchronously reads from Transform_Current while the CPU simulates the next frame."
+  limitations: "Pending integration of DirectStorage for the Asynchronous Asset Streamer."
+  tag: "graphics"
