@@ -245,5 +245,20 @@
         {{ content }}
       </section>
     </div>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ 
+        startOnLoad: true, 
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#0a1128',
+          primaryTextColor: '#c4d4e6',
+          primaryBorderColor: '#8ab4f8',
+          lineColor: '#00ff66',
+          secondaryColor: '#14203d',
+          tertiaryColor: '#050914'
+        }
+      });
+    </script>
   </body>
 </html>
