@@ -4,7 +4,7 @@ title: Devlog
 ---
 
 <style>
-  /* Devlog Feed Aesthetics */
+  /* --- Devlog Feed & Flexbox --- */
   .post-entry {
     background-color: #0a1128;
     border: 1px solid #14203d;
@@ -12,126 +12,150 @@ title: Devlog
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 3px;
-  }
-  .post-title {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-  }
-  .post-title a {
-    color: #c4d4e6;
-    text-decoration: none;
-  }
-  .post-title a:hover {
-    color: #00ff66; /* Biosphere Green */
-  }
-  .post-meta {
-    font-family: monospace;
-    color: #555;
-    font-size: 0.85rem;
-    margin-bottom: 15px;
-    border-bottom: 1px dashed #14203d;
-    padding-bottom: 10px;
-  }
-  .post-excerpt {
-    color: #a0a0a0;
-    line-height: 1.6;
-    font-size: 0.95rem;
-  }
-  
-  /* Pagination Controls */
-  .pagination {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background-color: #050914;
-    padding: 15px;
+    gap: 20px;
+  }
+  .post-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .post-title {
+    margin-top: 0; margin-bottom: 5px;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.8rem;
+  }
+  .post-title a { color: #c4d4e6; text-decoration: none; }
+  .post-title a:hover { color: #00ff66; }
+  
+  .post-meta {
+    font-family: monospace; color: #555; font-size: 0.85rem;
+    margin-bottom: 10px; border-bottom: 1px dashed #14203d; padding-bottom: 10px;
+  }
+  .post-excerpt { color: #a0a0a0; line-height: 1.6; font-size: 0.95rem; margin-bottom: 10px;}
+  
+  /* The Top-Right Image Box */
+  .post-thumbnail {
+    width: 140px; height: 140px;
+    flex-shrink: 0;
     border: 1px solid #14203d;
-    margin-top: 40px;
-    font-family: 'Rajdhani', sans-serif;
+    background-color: #02040a;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
   }
-  .page-btn {
-    color: #00ff66;
-    text-decoration: none;
-    padding: 5px 15px;
-    border: 1px solid #00ff66;
-    text-transform: uppercase;
-    font-weight: bold;
+  .post-thumbnail img {
+    width: 100%; height: 100%;
+    object-fit: cover; /* Crops center perfectly */
   }
-  .page-btn:hover {
-    background-color: #00ff66;
-    color: #000;
+
+  /* --- Tag Cloud UI --- */
+  .tag-cloud {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 30px; padding: 15px;
+    background-color: #050914; border: 1px solid #14203d;
   }
-  .jump-box {
-    background-color: #0a1128;
-    color: #00ff66;
-    border: 1px solid #14203d;
-    padding: 5px;
-    width: 50px;
-    text-align: center;
-    font-family: monospace;
+  .tag-pill {
+    background-color: #0d152b; color: #8ab4f8;
+    padding: 4px 12px; font-size: 0.8rem; font-family: monospace;
+    border: 1px solid #233761; border-radius: 2px; cursor: pointer;
+    transition: all 0.2s;
   }
+  .tag-pill:hover, .tag-pill.active {
+    background-color: #d600ff; color: #fff; border-color: #d600ff;
+  }
+  .tag-pill.clear-btn { background-color: #555; color: #fff; display: none; }
+  
+  .post-inline-tags { font-family: monospace; font-size: 0.75rem; color: #d600ff; margin-top: auto;}
 </style>
 
 <h1 style="color: #00ff66; font-family: 'Rajdhani', sans-serif; text-transform: uppercase;">Engineering Logs</h1>
 
-<div class="devlog-feed">
+<div class="tag-cloud" id="tagCloud">
+  {% assign all_tags = site.tags | map: 0 %}
+  {% for tag in all_tags %}
+    <span class="tag-pill" onclick="filterByTag('{{ tag | downcase }}', this)">{{ tag }}</span>
+  {% endfor %}
+  <span class="tag-pill clear-btn" id="clearTagsBtn" onclick="clearFilter()">[X] CLEAR FILTER</span>
+</div>
+
+<div id="paginated-feed">
   {% for post in paginator.posts %}
     <div class="post-entry">
-      <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
-      <div class="post-meta">
-        Posted by {{ post.author | default: "Dreadnaught Architect" }} | {{ post.date | date: "%B %d, %Y" }}
+      <div class="post-content">
+        <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <div class="post-meta">Posted by {{ post.author | default: "Dreadnaught Architect" }} | {{ post.date | date: "%B %d, %Y" }}</div>
+        <div class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
+        <div class="post-inline-tags">
+          {% for tag in post.tags %}[{{ tag }}] {% endfor %}
+        </div>
       </div>
-      <div class="post-excerpt">
-        {{ post.excerpt | strip_html | truncatewords: 40 }}
+      
+      <div class="post-thumbnail">
+        {% if post.image %}
+          <img src="{{ post.image }}" alt="Thumbnail">
+        {% else %}
+          {% assign content_img = post.content | split: '<img src="' %}
+          {% if content_img[1] %}
+            {% assign img_url = content_img[1] | split: '"' | first %}
+            <img src="{{ img_url }}" alt="Thumbnail">
+          {% else %}
+            <img src="/assets/images/templogo.png" alt="Generic Engine Logo">
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  
+  <div class="pagination" style="display: flex; justify-content: space-between; padding: 15px; border: 1px solid #14203d; margin-top: 40px;">
+    {% if paginator.previous_page %}<a href="{{ paginator.previous_page_path }}" style="color: #00ff66;"><< Newer</a>{% else %}<span style="color: #333;"><< Newer</span>{% endif %}
+    <span style="color: #8ab4f8;">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}<a href="{{ paginator.next_page_path }}" style="color: #00ff66;">Older >></a>{% else %}<span style="color: #333;">Older >></span>{% endif %}
+  </div>
+</div>
+
+<div id="filtered-feed" style="display: none;">
+  {% for post in site.posts %}
+    <div class="post-entry filtered-post" data-tags="{{ post.tags | join: ',' | downcase }}">
+      <div class="post-content">
+        <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <div class="post-meta">{{ post.date | date: "%B %d, %Y" }}</div>
+        <div class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
+        <div class="post-inline-tags">{% for tag in post.tags %}[{{ tag }}] {% endfor %}</div>
       </div>
     </div>
   {% endfor %}
 </div>
 
-{% if paginator.total_pages > 1 %}
-<div class="pagination">
-  
-  <div>
-    {% if paginator.previous_page %}
-      <a href="{{ paginator.previous_page_path }}" class="page-btn"><< Newer</a>
-    {% else %}
-      <span style="color: #333;"><< Newer</span>
-    {% endif %}
-  </div>
-
-  <div style="color: #8ab4f8;">
-    Page {{ paginator.page }} of {{ paginator.total_pages }}
-    &nbsp; | &nbsp; Jump to: 
-    <input type="number" id="pageJump" class="jump-box" min="1" max="{{ paginator.total_pages }}" onkeydown="if(event.key === 'Enter') jumpToPage()">
-  </div>
-
-  <div>
-    {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path }}" class="page-btn">Older >></a>
-    {% else %}
-      <span style="color: #333;">Older >></span>
-    {% endif %}
-  </div>
-
-</div>
-{% endif %}
-
 <script>
-  function jumpToPage() {
-    var maxPages = {{ paginator.total_pages }};
-    var input = document.getElementById('pageJump').value;
-    var pageNum = parseInt(input);
+  function filterByTag(selectedTag, element) {
+    // UI Toggles
+    document.getElementById('paginated-feed').style.display = 'none';
+    document.getElementById('filtered-feed').style.display = 'block';
+    document.getElementById('clearTagsBtn').style.display = 'inline-block';
     
-    if (pageNum > 0 && pageNum <= maxPages) {
-      if (pageNum === 1) {
-        window.location.href = "/devlog/";
+    // Highlight active pill
+    let pills = document.getElementsByClassName('tag-pill');
+    for(let p of pills) p.classList.remove('active');
+    element.classList.add('active');
+
+    // Filter Posts
+    let posts = document.getElementsByClassName('filtered-post');
+    for (let post of posts) {
+      let tags = post.getAttribute('data-tags').split(',');
+      if (tags.includes(selectedTag)) {
+        post.style.display = 'flex';
       } else {
-        window.location.href = "/devlog/page" + pageNum + "/";
+        post.style.display = 'none';
       }
-    } else {
-      alert("Page out of bounds. Enter a number between 1 and " + maxPages);
     }
+  }
+
+  function clearFilter() {
+    document.getElementById('paginated-feed').style.display = 'block';
+    document.getElementById('filtered-feed').style.display = 'none';
+    document.getElementById('clearTagsBtn').style.display = 'none';
+    let pills = document.getElementsByClassName('tag-pill');
+    for(let p of pills) p.classList.remove('active');
   }
 </script>
