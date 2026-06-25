@@ -9,6 +9,10 @@ This is the engineering journal for a custom high-performance, Data-Oriented, EC
 
 ---
 
+UPDATE LOG: <br>
+6/24/2026 - Updated home page with a tiny intro. <br>
+6/23/2026 - Created the site and put in placeholder pages. <br>
+
 Hello and welcome to the development page for the Dreadnaught Game Engine! You can call me JACK, and I'm learning how to code through the development of this engine. I'm using this blog to help with the production of my project. 
 
 As of 06/24/2026 I am still in the design phases of the engine. I have a general idea of what I want my game to eventually be, but I want to work out the systems before I commit to any code. I'll be updating the site intermittently mostly for personal reasons, but I'm making it public just in case anyone is curious about this project.
@@ -23,10 +27,6 @@ Anyway, below I'll be posting a quick update log whenever I update this site. I 
 
 Signing out,
 JACK
-
-UPDATE LOG: <br>
-6/24/2026 - Updated home page with a tiny intro. <br>
-6/23/2026 - Created the site and put in placeholder pages. <br>
 
 
 
