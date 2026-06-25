@@ -24,9 +24,9 @@ Anyway, below I'll be posting a quick update log whenever I update this site. I 
 Signing out,
 JACK
 
-UPDATE LOG:
-6/24/2026 - Updated home page with a tiny intro. 
-6/23/2026 - Created the site and put in placeholder pages.
+UPDATE LOG: <br>
+6/24/2026 - Updated home page with a tiny intro. <br>
+6/23/2026 - Created the site and put in placeholder pages. <br>
 
 
 
