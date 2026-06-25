@@ -1,17 +1,78 @@
 ---
 layout: default
-title: "Dreadnaught Engine Devlog"
+title: "Home"
 ---
 
-# The Dreadnaught Architecture Ledger
+<style>
+  /* Changelog Table Styles */
+  .changelog-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+  .changelog-table th {
+    text-align: left;
+    color: #8ab4f8;
+    border-bottom: 2px solid #14203d;
+    padding: 10px;
+  }
+  .changelog-table td {
+    padding: 10px;
+    border-bottom: 1px solid #14203d;
+    color: #c4d4e6;
+  }
+  .version-tag {
+    background-color: #0d152b;
+    color: #00ff66;
+    padding: 2px 6px;
+    border: 1px solid #00ff66;
+    font-weight: bold;
+  }
+  .view-all {
+    display: block;
+    margin-top: 15px;
+    color: #d600ff;
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .view-all:hover { text-decoration: underline; }
+</style>
 
-This is the engineering journal for a custom high-performance, Data-Oriented, ECS game engine written in C++23. 
+# Welcome to the Dreadnaught Engine
+This is the engineering journal for a high-performance, custom AAA-tier game engine written in C++23.
+
+## Recent Engineering Milestones
+<table class="changelog-table">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Date</th>
+      <th>Update</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% assign releases = site.posts | where: "status", "release" | limit: 5 %}
+    {% for post in releases %}
+    <tr>
+      <td><span class="version-tag">{{ post.version }}</span></td>
+      <td>{{ post.date | date: "%Y-%m-%d" }}</td>
+      <td><a href="{{ post.url }}" style="color: #c4d4e6;">{{ post.title }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="/devlog" class="view-all">>> View Full Changelog</a>
 
 ---
 
-UPDATE LOG: <br>
-6/24/2026 - Updated home page with a tiny intro. <br>
-6/23/2026 - Created the site and put in placeholder pages. <br>
+## Engine Status
+[Insert Mermaid or status summary here, or link to /status]
+
+---
 
 Hello and welcome to the development page for the Dreadnaught Game Engine! You can call me JACK, and I'm learning how to code through the development of this engine. I'm using this blog to help with the production of my project. 
 
@@ -27,10 +88,3 @@ Anyway, below I'll be posting a quick update log whenever I update this site. I 
 
 Signing out,
 JACK
-
-
-
-
-
-
-
