@@ -71,7 +71,7 @@ This is the engineering journal for a high-performance, custom AAA-tier game eng
 
 ## Site updates
 
-2026/06/24 - Updated homepage, added footer. 
+2026/06/24 - Updated homepage, added footer. <br>
 2026/06/23 - Created the site and added placeholder pages.
 
 ---
