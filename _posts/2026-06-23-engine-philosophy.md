@@ -3,7 +3,6 @@ layout: post
 title: "The Dreadnaught Engine Architecture"
 author: "JACK"
 status: release
-published: false
 date: 2026/06/23
 version: 0.0.0
 tags: [Memory, ECS, Networking, Physics, Graphics, AI, Tools, Audio, UI, Core]
