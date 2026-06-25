@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "The Dreadnaught Engine Architecture"
-author: "Dreadnaught Architect"
+author: "JACK"
+status: release
 tags: [Memory, ECS, Networking, Physics, Graphics, AI, Tools, Audio, UI, Core]
 ---
 # Major Decisions & Tech Stack
