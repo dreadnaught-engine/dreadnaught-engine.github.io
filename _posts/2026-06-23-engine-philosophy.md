@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Dreadnaught Engine Architecture"
+title: "Devlog #1 - The Dreadnaught Engine Architecture"
 author: "JACK"
 status: release
 date: 2026-06-23
