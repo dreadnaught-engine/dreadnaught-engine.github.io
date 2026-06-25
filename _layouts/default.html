@@ -21,17 +21,49 @@
         min-height: 100vh;
       }
       
-      /* The Header Area with Image */
+/* The Header Container */
       .dreadnaught-header {
         text-align: center;
-        padding: 70px 0 50px 0;
+        padding: 70px 0 30px 0; /* Adjusted padding to tighten spacing */
         background-color: #02040a;
         background-image: url('/assets/images/header_background.png');
         background-size: cover;
         background-position: center;
-        border-bottom: 2px solid #00ff66; /* Nature/Bioluminescent green border */
+        border-bottom: 2px solid #00ff66;
         position: relative;
       }
+
+      /* Logo */
+      .dreadnaught-logo {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: #d600ff;
+        text-shadow: 0px 0px 15px rgba(214, 0, 255, 0.8), 3px 3px 0px #000;
+        margin: 0;
+        letter-spacing: 4px;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Tagline Layout */
+      .header-tagline {
+        display: flex;
+        justify-content: space-between;
+        max-width: 600px; /* Aligns with the visual width of the logo text */
+        margin: 10px auto 0 auto;
+        padding: 0 10px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8ab4f8;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .left-tag { color: #00ff66; font-weight: bold; }
+      .right-tag { color: #e67e22; font-weight: bold; }
 
       /* Dark Tint Overlay (Ensures text is readable over complex images) */
       .dreadnaught-header::before {
@@ -228,6 +260,10 @@
   <body>
     <div class="dreadnaught-header">
       <h1 class="dreadnaught-logo">DREADNAUGHT</h1>
+      <div class="header-tagline">
+        <span class="left-tag">Game Engine</span>
+        <span class="right-tag">In Active Development</span>
+      </div>
     </div>
 
     <div class="nav-bar">
