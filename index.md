@@ -69,8 +69,10 @@ This is the engineering journal for a high-performance, custom AAA-tier game eng
 
 ---
 
-## Engine Status
-[Insert Mermaid or status summary here, or link to /status]
+## Site updates
+
+2026/06/24 - Updated homepage, added footer. 
+2026/06/23 - Created the site and added placeholder pages.
 
 ---
 
