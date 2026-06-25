@@ -88,5 +88,5 @@ And this is a personal project. I fully intend to release my games for free with
 
 Anyway, below I'll be posting a quick update log whenever I update this site. I think it came out pretty nice, except the color scheme is a bit weird, but I like weird.
 
-Signing out,
+Signing out,<br>
 JACK
