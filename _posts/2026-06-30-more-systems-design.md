@@ -22,6 +22,6 @@ On a personal level, I'll be starting classes again tomorrow, so working on this
 
 Speaking of, there's a Burnout mechanic I've devised for NPC workers at a player base. If you've played games like Rimworld, you basically assign priorities to a Pawn (NPC) and they choose actions based off of priorities. The issue is, if you have one person with a high priority, they will only commit to that job, even if they like other things or are skilled at other things.
 
-So I decided that pawns can switch their jobs every once in a while with a "Burnout" mechanic. Mathematically it's very simple, so it shouldn't take up that much perforance, and I hope to see an NPC of mine one day taking a much needed vacation on their own! This isn't real life, they're not bound to the cubicle, they can act as they wish. 
+So I decided that pawns can switch their jobs every once in a while with a "Burnout" mechanic. Mathematically it's very simple, so it shouldn't take up that much performance, and I hope to see an NPC of mine one day taking a much needed vacation on their own! This isn't real life, they're not bound to the cubicle, they can act as they wish. 
 
 -JACK
